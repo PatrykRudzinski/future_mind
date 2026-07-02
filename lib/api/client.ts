@@ -1,5 +1,6 @@
 import type {
   MovieDetail,
+  MovieDetailParams,
   MovieSearchParams,
   PaginatedMovieSearch,
 } from "@/lib/schemas";
@@ -58,7 +59,10 @@ export async function fetchMovieSearch(
   return parseJsonResponse<PaginatedMovieSearch>(response);
 }
 
-export async function fetchMovieDetail(imdbId: string): Promise<MovieDetail> {
-  const response = await fetch(apiEndpoints.movies.detail(imdbId));
+export async function fetchMovieDetail(params: MovieDetailParams): Promise<MovieDetail> {
+  const url = new URL(apiEndpoints.movies.detail(params.imdbId), window.location.origin);
+  url.searchParams.set("plot", params.plot);
+
+  const response = await fetch(url.toString());
   return parseJsonResponse<MovieDetail>(response);
 }

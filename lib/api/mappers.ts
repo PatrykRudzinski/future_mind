@@ -28,14 +28,15 @@ export function mapOmdbSearchToPaginated(
   data: OmdbSearchSuccess,
   page: number,
 ): PaginatedMovieSearch {
-  const totalResults = Number.parseInt(data.totalResults, 10);
+  const parsedTotalResults = Number.parseInt(data.totalResults, 10);
+  const totalResults = Number.isNaN(parsedTotalResults) ? 0 : parsedTotalResults;
   const items = data.Search.map(mapOmdbSearchItemToSummary);
 
   return {
     items,
-    totalResults: Number.isNaN(totalResults) ? 0 : totalResults,
+    totalResults,
     page,
-    hasMore: page * config.pagination.defaultPageSize < totalResults,
+    hasMore: page * config.pagination.omdbPageSize < totalResults,
   };
 }
 

@@ -16,7 +16,7 @@ export function useSearchMovies(params: MovieSearchParams, enabled = true) {
 export function useMovieDetail(params: MovieDetailParams, enabled = true) {
   return useQuery({
     queryKey: queryKeys.movies.detail(params),
-    queryFn: () => fetchMovieDetail(params.imdbId),
+    queryFn: () => fetchMovieDetail(params),
     enabled: enabled && params.imdbId.length > 0,
   });
 }
