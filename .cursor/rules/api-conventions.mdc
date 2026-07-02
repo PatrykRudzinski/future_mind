@@ -1,0 +1,36 @@
+---
+description: API layer and OMDb integration conventions
+globs: lib/api/**/*,app/api/**/*
+alwaysApply: false
+---
+
+# API Conventions
+
+## Layers
+
+1. `omdb-client.ts` — server-only, calls OMDb with `assertOmdbApiKey()`
+2. `app/api/movies/*` — BFF route handlers, map errors to HTTP status
+3. `client.ts` — browser fetch to internal routes
+4. `hooks.ts` — React Query wrappers
+
+## Error handling
+
+```typescript
+// OMDb returns { Response: "False", Error: "..." } — check with isOmdbError()
+if (isOmdbError(response)) {
+  return NextResponse.json({ error: response.Error }, { status: 404 });
+}
+```
+
+## Adding endpoints
+
+- Define Zod schema first in `lib/schemas/`
+- Add mapper if transforming to app DTO
+- Add query key in `query-keys.ts`
+- Document in `endpoints.ts` and README
+
+## Do not
+
+- Expose `OMDB_API_KEY` to client bundles
+- Skip Zod parsing on OMDb responses
+- Call OMDb directly from client components

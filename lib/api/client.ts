@@ -1,0 +1,64 @@
+import type {
+  MovieDetail,
+  MovieSearchParams,
+  PaginatedMovieSearch,
+} from "@/lib/schemas";
+
+import { apiEndpoints } from "@/lib/api/endpoints";
+
+export class ApiClientError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+  ) {
+    super(message);
+    this.name = "ApiClientError";
+  }
+}
+
+function buildSearchUrl(params: MovieSearchParams): string {
+  const url = new URL(apiEndpoints.movies.search, window.location.origin);
+
+  url.searchParams.set("query", params.query);
+  url.searchParams.set("page", String(params.page));
+
+  if (params.type) {
+    url.searchParams.set("type", params.type);
+  }
+
+  if (params.year) {
+    url.searchParams.set("year", String(params.year));
+  }
+
+  return url.toString();
+}
+
+async function parseJsonResponse<T>(response: Response): Promise<T> {
+  const payload: unknown = await response.json();
+
+  if (!response.ok) {
+    const message =
+      typeof payload === "object" &&
+      payload !== null &&
+      "error" in payload &&
+      typeof payload.error === "string"
+        ? payload.error
+        : "Request failed";
+
+    throw new ApiClientError(message, response.status);
+  }
+
+  return payload as T;
+}
+
+export async function fetchMovieSearch(
+  params: MovieSearchParams,
+): Promise<PaginatedMovieSearch> {
+  const response = await fetch(buildSearchUrl(params));
+  return parseJsonResponse<PaginatedMovieSearch>(response);
+}
+
+export async function fetchMovieDetail(imdbId: string): Promise<MovieDetail> {
+  const response = await fetch(apiEndpoints.movies.detail(imdbId));
+  return parseJsonResponse<MovieDetail>(response);
+}

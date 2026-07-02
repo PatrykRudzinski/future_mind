@@ -1,0 +1,31 @@
+---
+description: React and Next.js component patterns
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# React Patterns
+
+## Components
+
+- Functional components only
+- Server Components by default; add `"use client"` only when needed (hooks, events, browser APIs)
+- Colocate feature UI under `components/` (e.g. `components/movies/`)
+
+## Data fetching
+
+- Client: TanStack Query hooks from `lib/api/hooks.ts`
+- Server: call `searchMovies` / `getMovieByImdbId` directly in RSC or route handlers
+- Always render loading, error, and empty states
+
+## UI
+
+- Use shadcn/ui from `@/components/ui/*`
+- Compose with `cn()` from `@/lib/utils/cn`
+- Use Next.js `<Link>` and `<Image>` for navigation and posters
+
+## Favorites
+
+- Use `favoritesStorageAdapter` from `@/lib/utils/favorites-storage`
+- Generic adapter: `createLocalStorageAdapter` in `@/lib/utils/local-storage`
+- Validates read/write with Zod; handles JSON errors

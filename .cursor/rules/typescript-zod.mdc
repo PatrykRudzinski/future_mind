@@ -1,0 +1,35 @@
+---
+description: TypeScript and Zod schema standards
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript & Zod
+
+## Schemas
+
+- Raw API shapes: `lib/schemas/omdb.ts`
+- App DTOs: example `lib/schemas/movie.ts`, `lib/schemas/favorites.ts`
+- Export inferred types: `export type Foo = z.infer<typeof fooSchema>`
+
+## Validation
+
+```typescript
+// Route handlers — safeParse + 400 response
+const parsed = movieSearchParamsSchema.safeParse(input);
+if (!parsed.success) {
+  return NextResponse.json(
+    { error: parsed.error.issues[0]?.message },
+    { status: 400 },
+  );
+}
+
+// Server fetch — parse throws on invalid data
+return omdbSearchResponseSchema.parse(json);
+```
+
+## Types
+
+- Prefer `type` over `interface` for DTOs
+- No `any` — use `unknown` + Zod parse at boundaries
+- Import types with `import type { ... }`

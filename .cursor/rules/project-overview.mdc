@@ -1,0 +1,34 @@
+---
+description: Movie Finder project overview and conventions
+alwaysApply: true
+---
+
+# Movie Finder — Project Rules
+
+Recruitment task app: search movies (OMDb API), view details, manage favorites in localStorage.
+
+## Stack
+
+- Next.js 16 App Router, React 19, TypeScript, Tailwind v4
+- shadcn/ui in `components/ui/` — add via `npx shadcn@latest add <component>`
+- TanStack Query via `QueryProvider` in root layout
+- Zod schemas in `lib/schemas/` — validate all external data
+
+## Architecture
+
+- **OMDb key is server-only** — client calls `/api/movies/*`, never OMDb directly
+- **DTOs**: raw OMDb → `lib/schemas/omdb.ts` → mappers → app DTOs in `lib/schemas/movie.ts`
+- **Favorites**: client-only, key `movie-finder:favorites`, validate with `favoritesStorageSchema`, but make it storage independent, use react-query to obtain data from localStorage, to make it compatible with future external API usage
+
+## Routes
+
+- `/` — search, filters, results, pagination
+- `/movies/[imdbId]` — detail view with SEO metadata
+- `/favorites` — persisted favorites list
+
+## Code style
+
+- Prefer existing shadcn components over custom UI
+- Use `useSearchMovies` / `useMovieDetail` hooks for data fetching
+- Handle loading, error, and empty states in UI
+- Keep components accessible (WCAG) and responsive
