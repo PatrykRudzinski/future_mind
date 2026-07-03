@@ -37,9 +37,12 @@ describe("createLocalStorageAdapter", () => {
 
     const result = adapter.read();
 
-    expect(result.success).toBe(false);
+    if (result.success) {
+      throw new Error("Expected read to fail");
+    }
+
     expect(result.data).toEqual([]);
-    expect(result.error?.code).toBe("json_parse");
+    expect(result.error.code).toBe("json_parse");
   });
 
   it("falls back to the default value when stored data fails validation", () => {
@@ -47,16 +50,22 @@ describe("createLocalStorageAdapter", () => {
 
     const result = adapter.read();
 
-    expect(result.success).toBe(false);
+    if (result.success) {
+      throw new Error("Expected read to fail");
+    }
+
     expect(result.data).toEqual([]);
-    expect(result.error?.code).toBe("validation");
+    expect(result.error.code).toBe("validation");
   });
 
   it("rejects invalid writes", () => {
     const result = adapter.write([{ id: 123, title: "Invalid" }] as never);
 
-    expect(result.success).toBe(false);
-    expect(result.error?.code).toBe("validation");
+    if (result.success) {
+      throw new Error("Expected write to fail");
+    }
+
+    expect(result.error.code).toBe("validation");
   });
 
   it("removes stored values", () => {

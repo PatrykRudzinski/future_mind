@@ -2,13 +2,14 @@
 
 A Next.js movie search application built for the Future Mind recruitment task. Browse movies via the [OMDb API](https://www.omdbapi.com/), view details, and manage a persistent favorites list.
 
-## Features (planned)
+## Features
 
-| Area              | Description                                                                    |
-| ----------------- | ------------------------------------------------------------------------------ |
-| **Home**          | Search form, filters (year, type), results list, pagination or infinite scroll |
-| **Movie details** | Title, plot, genre, year, rating, poster, and related metadata                 |
-| **Favorites**     | Add/remove movies; persisted in `localStorage` across refreshes                |
+| Area              | Description                                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------------ |
+| **Home**          | Search form, filters (year, type), results list, classic pagination (16 items per page)          |
+| **Movie details** | Title, plot, genre, year, rating, poster, and related metadata; SSR with SEO metadata + JSON-LD |
+| **Favorites**     | Dedicated `/favorites` page — add/remove movies; persisted in `localStorage` across refreshes    |
+| **UX & SEO**      | Responsive layout, WCAG basics, theme toggle (light/dark), Open Graph / Twitter cards, sitemap   |
 
 ## Tech stack
 
@@ -96,10 +97,11 @@ PORT=3001 npm run start
 
 Environment variables (see `.env.example`):
 
-| Variable                   | Required | Description                                         |
-| -------------------------- | -------- | --------------------------------------------------- |
-| `OMDB_API_KEY`             | Yes      | Server-side OMDb API key                            |
-| `NEXT_PUBLIC_OMDB_API_URL` | No       | OMDb base URL (default: `https://www.omdbapi.com/`) |
+| Variable                   | Required | Description                                                              |
+| -------------------------- | -------- | ------------------------------------------------------------------------ |
+| `OMDB_API_KEY`             | Yes      | Server-side OMDb API key                                                 |
+| `NEXT_PUBLIC_OMDB_API_URL` | No       | OMDb base URL (default: `https://www.omdbapi.com/`)                      |
+| `NEXT_PUBLIC_APP_URL`      | No       | Public app URL for canonical links and sitemap (default: `http://localhost:3000`; set in production) |
 
 Runtime config lives in `lib/config.ts`. The API key is **never** exposed to the browser — client code calls internal Next.js API routes.
 
@@ -120,7 +122,7 @@ app/
 
 | Route                  | Type            | Purpose                                        |
 | ---------------------- | --------------- | ---------------------------------------------- |
-| `/`                    | Server + Client | Search UI, filters, paginated/infinite results |
+| `/`                    | Server + Client | Search UI, filters, paginated results          |
 | `/movies/[imdbId]`     | Dynamic         | Movie detail view; `generateMetadata` for SEO  |
 | `/favorites`           | Client-heavy    | Favorites list from localStorage               |
 | `/api/movies/search`   | Route Handler   | Proxy to OMDb search (`s` param)               |
