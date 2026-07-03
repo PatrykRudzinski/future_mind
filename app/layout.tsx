@@ -3,6 +3,7 @@ import { DM_Sans } from "next/font/google";
 
 import { SiteHeader } from "@/components/layout/site-header";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { config } from "@/lib/config";
 
@@ -43,13 +44,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("dark", "h-full", "antialiased", "font-sans", dmSans.variable)}
+      className={cn("h-full", "antialiased", "font-sans", dmSans.variable)}
       suppressHydrationWarning
     >
       <body
         className="min-h-full flex flex-col font-sans"
         suppressHydrationWarning
       >
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
         <QueryProvider>
           <a
             href="#main-content"
@@ -63,6 +65,7 @@ export default function RootLayout({
           </main>
           <Toaster richColors position="bottom-center" />
         </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

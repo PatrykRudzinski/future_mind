@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { config } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +46,7 @@ export function SiteHeader() {
           {config.app.name}
         </Link>
         <nav aria-label="Main" className="flex items-center gap-4">
+          <ThemeToggle />
           <NavLink
             href="/"
             active={isSearch}
