@@ -11,7 +11,7 @@ import { useFavorites } from "@/lib/hooks/use-favorites";
 import type { FavoriteMovie } from "@/lib/schemas/favorites";
 
 export function FavoritesList() {
-  const { favorites, isLoading, addFavorite, removeFavorite } = useFavorites();
+  const { favorites, isLoading, isError, error, addFavorite, removeFavorite } = useFavorites();
 
   const handleFavoriteRemoved = (movie: FavoriteMovie) => {
     removeFavorite(movie.id);
@@ -26,11 +26,25 @@ export function FavoritesList() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <section aria-live="polite" aria-busy="true">
+        <h2 className="sr-only">Loading favorites</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {Array.from({ length: 3 }).map((_, index) => (
-          <Skeleton key={index} className="aspect-[2/3] w-full rounded-xl" />
+          <Skeleton key={index} className="aspect-2/3 w-full rounded-xl" />
         ))}
-      </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Alert variant="destructive">
+        <AlertTitle>Favorites unavailable</AlertTitle>
+        <AlertDescription>
+          {error instanceof Error ? error.message : "Could not read your saved movies."}
+        </AlertDescription>
+      </Alert>
     );
   }
 

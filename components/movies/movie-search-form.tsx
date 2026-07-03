@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 
 import { MovieSearchResults } from "@/components/movies/movie-search-results";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,9 @@ type MovieSearchFormProps = {
 
 function MovieSearchForm({ initialParams }: MovieSearchFormProps) {
   const router = useRouter();
+  const queryInputRef = useRef<HTMLInputElement>(null);
+  const yearInputRef = useRef<HTMLInputElement>(null);
+  const typeTriggerRef = useRef<HTMLButtonElement>(null);
   const [query, setQuery] = useState(initialParams?.query ?? "");
   const [year, setYear] = useState(initialParams?.year ? String(initialParams.year) : "");
   const [type, setType] = useState(initialParams?.type ?? "all");
@@ -77,6 +80,15 @@ function MovieSearchForm({ initialParams }: MovieSearchFormProps) {
         year: fieldErrors.year?.[0],
         type: fieldErrors.type?.[0],
       });
+
+      if (fieldErrors.query?.[0]) {
+        queryInputRef.current?.focus();
+      } else if (fieldErrors.year?.[0]) {
+        yearInputRef.current?.focus();
+      } else if (fieldErrors.type?.[0]) {
+        typeTriggerRef.current?.focus();
+      }
+
       return;
     }
 
@@ -100,6 +112,7 @@ function MovieSearchForm({ initialParams }: MovieSearchFormProps) {
             <div className="grid min-w-0 gap-2 sm:col-span-2">
               <Label htmlFor="search-query">Search movies</Label>
               <Input
+                ref={queryInputRef}
                 id="search-query"
                 name="query"
                 type="search"
@@ -119,6 +132,7 @@ function MovieSearchForm({ initialParams }: MovieSearchFormProps) {
             <div className="grid min-w-0 gap-2 sm:col-span-1">
               <Label htmlFor="search-year">Release year</Label>
               <Input
+                ref={yearInputRef}
                 id="search-year"
                 name="year"
                 type="text"
@@ -145,6 +159,7 @@ function MovieSearchForm({ initialParams }: MovieSearchFormProps) {
                 }}
               >
                 <SelectTrigger
+                  ref={typeTriggerRef}
                   id="search-type"
                   className="w-full"
                   aria-invalid={Boolean(errors.type)}

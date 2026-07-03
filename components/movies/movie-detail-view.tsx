@@ -18,10 +18,10 @@ function DetailField({ label, value }: { label: string; value?: string }) {
   }
 
   return (
-    <div>
-      <dt className="text-muted-foreground text-sm">{label}</dt>
-      <dd className="mt-1">{value}</dd>
-    </div>
+    <>
+      <dt className="text-muted-foreground text-sm sm:pt-0.5">{label}</dt>
+      <dd>{value}</dd>
+    </>
   );
 }
 
@@ -56,7 +56,7 @@ export function MovieDetailView({ movie }: MovieDetailViewProps) {
           ) : null}
         </div>
 
-        <dl className="grid gap-4 sm:grid-cols-2">
+        <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-[max-content_minmax(0,1fr)]">
           <DetailField label="Genre" value={movie.genre} />
           <DetailField label="Director" value={movie.director} />
           <DetailField label="Cast" value={movie.actors} />

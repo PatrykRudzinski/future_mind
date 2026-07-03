@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FavoriteButton } from "@/components/movies/favorite-button";
 import { MoviePoster } from "@/components/movies/movie-poster";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { FavoriteMovie } from "@/lib/schemas/favorites";
 import type { MovieSummary } from "@/lib/schemas";
 
@@ -36,9 +36,9 @@ export function MovieCard({ movie, onFavoriteRemoved }: MovieCardProps) {
         </div>
 
         <CardHeader className="gap-2 pt-4 pb-2">
-          <CardTitle className="line-clamp-2 min-h-[2.75rem] text-base leading-snug">
+          <h3 className="font-heading line-clamp-2 min-h-[2.75rem] text-base leading-snug font-medium">
             {movie.title}
-          </CardTitle>
+          </h3>
           <div className="flex flex-wrap gap-2">
             <Badge variant="secondary">{movie.year}</Badge>
             <Badge variant="outline" className="capitalize">

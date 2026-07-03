@@ -1,4 +1,5 @@
 const omdbApiUrl = process.env.NEXT_PUBLIC_OMDB_API_URL ?? "https://www.omdbapi.com/";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export const config = {
   omdb: {
@@ -8,6 +9,7 @@ export const config = {
   app: {
     name: "Movie Finder",
     description: "Search movies and browse details powered by OMDb API",
+    url: appUrl,
   },
   pagination: {
     defaultPageSize: 16,

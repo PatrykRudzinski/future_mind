@@ -35,7 +35,7 @@ function NavLink({ href, active, icon, label }: NavLinkProps) {
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const isSearch = pathname === "/" || pathname.startsWith("/movies/");
+  const isSearch = pathname === "/";
   const isFavorites = pathname.startsWith("/favorites");
 
   return (

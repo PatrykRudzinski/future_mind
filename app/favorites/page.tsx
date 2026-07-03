@@ -5,6 +5,10 @@ import { FavoritesList } from "@/components/movies/favorites-list";
 export const metadata: Metadata = {
   title: "Favorites",
   description: "Your saved movies",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function FavoritesPage() {

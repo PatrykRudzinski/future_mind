@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Ensure metadata (including meta description) is rendered in <head> for all
+  // user agents. Next.js 16 streams metadata into <body> by default in dev,
+  // which Lighthouse does not count as a document meta description.
+  htmlLimitedBots: /.*/,
   images: {
     /**
      * OMDb returns movie poster URLs hosted on Amazon / IMDb CDNs, not on this app.
@@ -27,6 +31,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
+        hostname: "ia.media-imdb.com",
+      },
+      {
+        protocol: "https",
         hostname: "ia.media-imdb.com",
       },
     ],

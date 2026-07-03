@@ -7,13 +7,19 @@ import type { FavoriteMovie, FavoritesStorage } from "@/lib/schemas/favorites";
 import { favoritesStorageAdapter } from "@/lib/utils/favorites-storage";
 
 function readFavorites(): FavoritesStorage {
-  return favoritesStorageAdapter.read().data;
+  const result = favoritesStorageAdapter.read();
+
+  if (!result.success) {
+    throw result.error;
+  }
+
+  return result.data;
 }
 
 export function useFavorites() {
   const queryClient = useQueryClient();
 
-  const { data: favorites = [], isLoading } = useQuery({
+  const { data: favorites = [], isLoading, isError, error } = useQuery({
     queryKey: queryKeys.favorites.all,
     queryFn: readFavorites,
   });
@@ -31,7 +37,12 @@ export function useFavorites() {
       }
 
       const next = [...current, movie];
-      favoritesStorageAdapter.write(next);
+      const result = favoritesStorageAdapter.write(next);
+
+      if (!result.success) {
+        throw result.error;
+      }
+
       return next;
     },
     onSuccess: syncFavorites,
@@ -40,7 +51,12 @@ export function useFavorites() {
   const removeMutation = useMutation({
     mutationFn: async (imdbId: string) => {
       const next = readFavorites().filter((item) => item.id !== imdbId);
-      favoritesStorageAdapter.write(next);
+      const result = favoritesStorageAdapter.write(next);
+
+      if (!result.success) {
+        throw result.error;
+      }
+
       return next;
     },
     onSuccess: syncFavorites,
@@ -68,6 +84,8 @@ export function useFavorites() {
   return {
     favorites,
     isLoading,
+    isError,
+    error: error ?? addMutation.error ?? removeMutation.error,
     isFavorite,
     addFavorite,
     removeFavorite,

@@ -55,6 +55,7 @@ Useful during development:
 
 ```bash
 npm run lint          # Run ESLint
+npm run test          # Run unit tests
 npm run build         # Verify the app builds successfully
 ```
 
@@ -89,6 +90,7 @@ PORT=3001 npm run start
 | `npm run build` | Create optimized production build          |
 | `npm run start` | Serve production build (run after `build`) |
 | `npm run lint`  | Run ESLint                                 |
+| `npm run test`  | Run unit tests (Vitest)                    |
 
 ## Configuration
 

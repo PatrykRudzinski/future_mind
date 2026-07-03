@@ -8,6 +8,10 @@ import {
 } from "@/lib/api";
 import { movieDetailParamsSchema } from "@/lib/schemas";
 
+const CACHE_HEADERS = {
+  "Cache-Control": "s-maxage=300, stale-while-revalidate=3600",
+};
+
 type RouteContext = {
   params: Promise<{ imdbId: string }>;
 };
@@ -35,7 +39,7 @@ export async function GET(request: Request, context: RouteContext) {
       return NextResponse.json({ error: response.Error }, { status: 404 });
     }
 
-    return NextResponse.json(mapOmdbDetailToMovieDetail(response));
+    return NextResponse.json(mapOmdbDetailToMovieDetail(response), { headers: CACHE_HEADERS });
   } catch (error) {
     if (error instanceof OmdbApiError) {
       return NextResponse.json({ error: error.message }, { status: error.status ?? 502 });

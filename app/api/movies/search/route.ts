@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import { OmdbApiError, searchMoviesPaginated } from "@/lib/api";
 import { movieSearchParamsSchema } from "@/lib/schemas";
 
+const CACHE_HEADERS = {
+  "Cache-Control": "s-maxage=60, stale-while-revalidate=300",
+};
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
@@ -23,7 +27,7 @@ export async function GET(request: Request) {
   try {
     const data = await searchMoviesPaginated(parsed.data);
 
-    return NextResponse.json(data);
+    return NextResponse.json(data, { headers: CACHE_HEADERS });
   } catch (error) {
     if (error instanceof OmdbApiError) {
       return NextResponse.json({ error: error.message }, { status: error.status ?? 502 });

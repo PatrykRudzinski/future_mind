@@ -4,6 +4,7 @@ import type {
   MovieSearchParams,
   PaginatedMovieSearch,
 } from "@/lib/schemas";
+import { movieDetailSchema, paginatedMovieSearchSchema } from "@/lib/schemas";
 
 import { apiEndpoints } from "@/lib/api/endpoints";
 
@@ -34,7 +35,10 @@ function buildSearchUrl(params: MovieSearchParams): string {
   return url.toString();
 }
 
-async function parseJsonResponse<T>(response: Response): Promise<T> {
+async function parseJsonResponse<T>(
+  response: Response,
+  schema: { parse: (payload: unknown) => T },
+): Promise<T> {
   const payload: unknown = await response.json();
 
   if (!response.ok) {
@@ -49,14 +53,14 @@ async function parseJsonResponse<T>(response: Response): Promise<T> {
     throw new ApiClientError(message, response.status);
   }
 
-  return payload as T;
+  return schema.parse(payload);
 }
 
 export async function fetchMovieSearch(
   params: MovieSearchParams,
 ): Promise<PaginatedMovieSearch> {
   const response = await fetch(buildSearchUrl(params));
-  return parseJsonResponse<PaginatedMovieSearch>(response);
+  return parseJsonResponse(response, paginatedMovieSearchSchema);
 }
 
 export async function fetchMovieDetail(params: MovieDetailParams): Promise<MovieDetail> {
@@ -64,5 +68,5 @@ export async function fetchMovieDetail(params: MovieDetailParams): Promise<Movie
   url.searchParams.set("plot", params.plot);
 
   const response = await fetch(url.toString());
-  return parseJsonResponse<MovieDetail>(response);
+  return parseJsonResponse(response, movieDetailSchema);
 }

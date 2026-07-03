@@ -21,7 +21,7 @@ function ResultsSkeleton() {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {Array.from({ length: config.pagination.defaultPageSize }).map((_, index) => (
         <div key={index} className="space-y-3 rounded-xl border p-4">
-          <Skeleton className="aspect-[2/3] w-full rounded-lg" />
+          <Skeleton className="aspect-2/3 w-full rounded-lg" />
           <Skeleton className="h-5 w-3/4" />
           <Skeleton className="h-4 w-1/2" />
         </div>
@@ -80,7 +80,7 @@ function Pagination({
             Previous
           </Button>
         )}
-        <p className="text-muted-foreground min-w-[4.5rem] text-center text-sm tabular-nums">
+        <p className="text-muted-foreground min-w-18 text-center text-sm tabular-nums">
           {page} of {totalPages}
         </p>
         {nextHref ? (
@@ -100,7 +100,7 @@ function Pagination({
 }
 
 export function MovieSearchResults({ searchParams }: MovieSearchResultsProps) {
-  const { data, isLoading, isError, error } = useSearchMovies(searchParams);
+  const { data, isLoading, isFetching, isError, error, refetch } = useSearchMovies(searchParams);
 
   if (isLoading) {
     return (
@@ -115,8 +115,11 @@ export function MovieSearchResults({ searchParams }: MovieSearchResultsProps) {
     return (
       <Alert variant="destructive">
         <AlertTitle>Search failed</AlertTitle>
-        <AlertDescription>
-          {error instanceof Error ? error.message : "Something went wrong while searching movies."}
+        <AlertDescription className="space-y-3">
+          <p>{error instanceof Error ? error.message : "Something went wrong while searching movies."}</p>
+          <Button type="button" variant="outline" onClick={() => void refetch()}>
+            Try again
+          </Button>
         </AlertDescription>
       </Alert>
     );
@@ -127,14 +130,15 @@ export function MovieSearchResults({ searchParams }: MovieSearchResultsProps) {
   }
 
   return (
-    <section aria-live="polite" className="space-y-6">
+    <section aria-busy={isFetching} className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-lg font-semibold">
           Results for &ldquo;{searchParams.query}&rdquo;
         </h2>
-        <p className="text-muted-foreground text-sm">
-          {data.totalResults.toLocaleString()} matches
-        </p>
+        <div className="text-muted-foreground text-right text-sm" aria-live="polite">
+          <p>{data.totalResults.toLocaleString()} matches</p>
+          {isFetching ? <p>Updating results...</p> : null}
+        </div>
       </div>
 
       <MovieGrid movies={data.items} />
