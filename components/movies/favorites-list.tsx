@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFavorites } from "@/lib/hooks/use-favorites";
 import type { FavoriteMovie } from "@/lib/schemas/favorites";
+import { truncateWithEllipsis } from "@/lib/utils/truncate-with-ellipsis";
 
 export function FavoritesList() {
   const { favorites, isLoading, isError, error, addFavorite, removeFavorite } = useFavorites();
@@ -16,7 +17,7 @@ export function FavoritesList() {
   const handleFavoriteRemoved = (movie: FavoriteMovie) => {
     removeFavorite(movie.id);
 
-    toast.success(`Removed "${movie.title}" from favorites`, {
+    toast.success(`Removed "${truncateWithEllipsis(movie.title, 20)}" from favorites`, {
       action: {
         label: "Undo",
         onClick: () => addFavorite(movie),
@@ -29,9 +30,9 @@ export function FavoritesList() {
       <section aria-live="polite" aria-busy="true">
         <h2 className="sr-only">Loading favorites</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {Array.from({ length: 3 }).map((_, index) => (
-          <Skeleton key={index} className="aspect-2/3 w-full rounded-xl" />
-        ))}
+          {Array.from({ length: 3 }).map((_, index) => (
+            <Skeleton key={index} className="aspect-2/3 w-full rounded-xl" />
+          ))}
         </div>
       </section>
     );

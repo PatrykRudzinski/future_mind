@@ -13,6 +13,7 @@ import {
 } from "@/lib/api";
 import { config } from "@/lib/config";
 import type { MovieDetail } from "@/lib/schemas";
+import { truncateWithEllipsis } from "@/lib/utils/truncate-with-ellipsis";
 
 type MovieDetailsPageProps = {
   params: Promise<{ imdbId: string }>;
@@ -38,7 +39,7 @@ const loadMovie = cache(async function loadMovie(imdbId: string) {
 
 function buildMovieDescription(movie: MovieDetail): string {
   if (movie.plot) {
-    return movie.plot.length > 160 ? `${movie.plot.slice(0, 157)}...` : movie.plot;
+    return truncateWithEllipsis(movie.plot, 160);
   }
 
   const parts = [`${movie.title} (${movie.year})`];

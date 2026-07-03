@@ -17,7 +17,7 @@ export default function FavoritesPage() {
       <section className="space-y-2">
         <h1 className="text-3xl font-semibold tracking-tight">Favorites</h1>
         <p className="text-muted-foreground">
-          Movies you save here stay in your browser after refresh.
+          Movies you save as favorites.
         </p>
       </section>
 
